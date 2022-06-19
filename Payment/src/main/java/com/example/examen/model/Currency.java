@@ -1,5 +1,15 @@
 package com.example.examen.model;
 
-public enum Currency {
-    EURO, USD, RON
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
+@Setter
+@Getter
+@AllArgsConstructor
+@Data
+public class Currency {
+    private String instanceId;
+    private String value;
 }

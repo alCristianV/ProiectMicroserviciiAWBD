@@ -2,6 +2,7 @@ package com.example.examen.service;
 
 import com.example.examen.exception.PaymentCancelledException;
 import com.example.examen.exception.PaymentNotExistException;
+import com.example.examen.model.CurrencyValues;
 import com.example.examen.model.Payment;
 import com.example.examen.model.Status;
 import com.example.examen.model.Type;
@@ -32,7 +33,7 @@ public class PaymentServiceTest {
 
     @BeforeAll
     public static void setup() {
-        payment = Optional.of(new Payment(1L, Type.ONLINE, "Cristi", 10.0, Status.NEW));
+        payment = Optional.of(new Payment(1L, Type.ONLINE, "Cristi", 10.0, Status.NEW, CurrencyValues.EURO));
     }
 
     @Test
@@ -149,7 +150,7 @@ public class PaymentServiceTest {
     @DisplayName("Test Cancel Payment PaymentCancelledException")
     public void testCancelPaymentAlreadyCancelled() {
         // arrange
-        Payment cancelledPayment = new Payment(2L, Type.ONLINE, "Cristi", 10.0, Status.CANCELLED);
+        Payment cancelledPayment = new Payment(2L, Type.ONLINE, "Cristi", 10.0, Status.CANCELLED, CurrencyValues.RON);
         when(repository.findById(cancelledPayment.getId())).thenReturn(Optional.of(cancelledPayment));
 
         // act & assert

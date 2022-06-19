@@ -6,6 +6,8 @@ import com.example.examen.model.Payment;
 import com.example.examen.model.Status;
 import com.example.examen.model.Type;
 import com.example.examen.service.PaymentService;
+import com.example.examen.service.client.CurrencyServiceProxy;
+import io.github.resilience4j.circuitbreaker.annotation.CircuitBreaker;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.Link;
@@ -31,11 +33,32 @@ public class PaymentController {
     @Autowired
     private PaymentMapper mapper;
 
+    @Autowired
+    CurrencyServiceProxy currencyServiceProxy;
+
     @PostMapping
+    @CircuitBreaker(name="createPayment", fallbackMethod = "createPaymentFallback")
     public ResponseEntity<Payment> create(
             @Valid
             @RequestBody CreatePaymentRequestDto request) {
-        Payment payment = service.add(mapper.createPaymentRequestDtoToPayment(request));
+
+        request.setCurrency(currencyServiceProxy.findCurrency().getValue());
+        Payment createPayment = mapper.createPaymentRequestDtoToPayment(request);
+
+        Payment payment = service.add(createPayment);
+        Link selfLink = linkTo(methodOn(PaymentController.class).getPayment(payment.getId())).withSelfRel();
+        payment.add(selfLink);
+        Link deleteLink = linkTo(methodOn(PaymentController.class).cancel(payment.getId())).withRel("cancelPayment");
+        payment.add(deleteLink);
+        return ResponseEntity.created(URI.create("/payments/" + payment.getId()))
+                .body(payment);
+    }
+
+    private ResponseEntity<Payment> createPaymentFallback(@Valid
+                                          @RequestBody CreatePaymentRequestDto request, Throwable throwable) {
+        Payment createPayment = mapper.createPaymentRequestDtoToPayment(request);
+
+        Payment payment = service.add(createPayment);
         Link selfLink = linkTo(methodOn(PaymentController.class).getPayment(payment.getId())).withSelfRel();
         payment.add(selfLink);
         Link deleteLink = linkTo(methodOn(PaymentController.class).cancel(payment.getId())).withRel("cancelPayment");

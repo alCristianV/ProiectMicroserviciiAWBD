@@ -13,6 +13,6 @@ public class Controller {
 
     @GetMapping("/currency")
     public Currency getCurrency() {
-        return new Currency(configuration.getValue());
+        return new Currency(configuration.getVersion(), configuration.getValue());
     }
 }

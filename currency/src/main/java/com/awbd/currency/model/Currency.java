@@ -8,5 +8,6 @@ import lombok.Setter;
 @Getter
 @AllArgsConstructor
 public class Currency {
+    private String instanceId;
     private String value;
 }

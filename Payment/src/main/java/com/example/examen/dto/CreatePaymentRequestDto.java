@@ -36,7 +36,6 @@ public class CreatePaymentRequestDto {
         this.currency = currency;
     }
 
-    @NotBlank
     @Size(max = 20)
     private String currency;
 

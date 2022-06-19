@@ -21,13 +21,13 @@ public class Payment extends RepresentationModel<Payment> {
     private double amount;
 
     @Column
-    private Currency currency;
+    private CurrencyValues currency;
 
-    public Currency getCurrency() {
+    public CurrencyValues getCurrency() {
         return currency;
     }
 
-    public void setCurrency(Currency currency) {
+    public void setCurrency(CurrencyValues currency) {
         this.currency = currency;
     }
 
@@ -37,19 +37,21 @@ public class Payment extends RepresentationModel<Payment> {
     public Payment() {
     }
 
-    public Payment(long id, Type type, String customer, double amount, Status status) {
+    public Payment(long id, Type type, String customer, double amount, Status status, CurrencyValues currency) {
         this.id = id;
         this.type = type;
         this.customer = customer;
         this.amount = amount;
         this.status = status;
+        this.currency = currency;
     }
 
-    public Payment(Type type, String customer, double amount, Status status) {
+    public Payment(Type type, String customer, double amount, Status status, CurrencyValues currency) {
         this.type = type;
         this.customer = customer;
         this.amount = amount;
         this.status = status;
+        this.currency = currency;
     }
 
     public long getId() {

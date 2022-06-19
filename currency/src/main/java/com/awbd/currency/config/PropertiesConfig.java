@@ -10,5 +10,6 @@ import org.springframework.stereotype.Component;
 @Getter
 @Setter
 public class PropertiesConfig {
+    private String version;
     private String value;
 }
